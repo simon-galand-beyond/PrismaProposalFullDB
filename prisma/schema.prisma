@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Voile {
+  id        Int         @id @default(autoincrement())
+  name      String
+  Parameter Parameter[]
+}
+
+model ParameterDetails {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  pilot       String
+  publicName  String
+  min         Float
+  max         Float
+  unit        String
+  accessLevel Int
+  Parameter   Parameter[]
+}
+
+model Parameter {
+  id      Int              @id @default(autoincrement())
+  name    String
+  value   Float
+  pilot   String
+  details ParameterDetails @relation(fields: [name], references: [name])
+  voile   Voile            @relation(fields: [voileId], references: [id])
+  voileId Int
+}
